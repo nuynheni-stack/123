@@ -172,7 +172,7 @@
                 id: 1,
                 name: "男士純棉圓領短袖T恤", // Tên sản phẩm
                 price: "NT$ 350",           // Giá
-                image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60", // Link ảnh
+                image: "[https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60](https://www.canva.com/vi_vn/do-hoa/s/hinh-anh-hoat-hinh-cute/?continuation=650)", // Link ảnh
                 desc: "100%純棉材質，透氣舒適，四面彈力不緊繃。適合休閒、通勤等多種場合穿著。" // Mô tả
             },
             {
