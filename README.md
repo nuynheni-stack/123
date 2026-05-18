@@ -1,15 +1,15 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cửa Hàng Trực Tuyến</title>
+    <title>線上商城</title>
     <style>
-        /* Cài đặt cơ bản */
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
+        /* 基本設定 */
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif; }
         body { background-color: #f5f5f5; color: #333; }
 
-        /* Thanh điều hướng (Header) phong cách Shopee */
+        /* 導覽列 (Header) */
         header {
             background-color: #ee4d2d;
             padding: 15px 20px;
@@ -21,10 +21,10 @@
             top: 0;
             z-index: 100;
         }
-        header h1 { font-size: 24px; }
-        .search-bar { padding: 8px; border: none; border-radius: 2px; width: 300px; }
+        header h1 { font-size: 24px; letter-spacing: 1px; }
+        .search-bar { padding: 8px 15px; border: none; border-radius: 2px; width: 300px; outline: none; }
 
-        /* Khu vực danh sách sản phẩm */
+        /* 商品區塊 */
         .container { max-width: 1200px; margin: 20px auto; padding: 0 10px; }
         .product-grid {
             display: grid;
@@ -32,7 +32,7 @@
             gap: 15px;
         }
 
-        /* Thẻ Sản Phẩm */
+        /* 商品卡片 */
         .product-card {
             background: white;
             border-radius: 3px;
@@ -40,13 +40,15 @@
             box-shadow: 0 1px 2px rgba(0,0,0,0.1);
             transition: transform 0.2s, box-shadow 0.2s;
             cursor: pointer;
+            display: flex;
+            flex-direction: column;
         }
         .product-card:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
         .product-img { width: 100%; height: 200px; object-fit: cover; }
-        .product-info { padding: 10px; }
+        .product-info { padding: 10px; display: flex; flex-direction: column; justify-content: space-between; flex-grow: 1; }
         .product-title {
             font-size: 14px;
             margin-bottom: 8px;
@@ -55,22 +57,23 @@
             -webkit-box-orient: vertical;
             overflow: hidden;
             text-overflow: ellipsis;
+            line-height: 1.4;
         }
-        .product-price { color: #ee4d2d; font-size: 16px; font-weight: bold; }
+        .product-price { color: #ee4d2d; font-size: 16px; font-weight: bold; margin-top: auto; }
 
-        /* Cửa sổ chi tiết sản phẩm (Modal) */
+        /* 彈出視窗 (Modal) */
         .modal {
             display: none; 
             position: fixed; 
             z-index: 1000; 
             left: 0; top: 0; 
             width: 100%; height: 100%; 
-            background-color: rgba(0,0,0,0.5);
+            background-color: rgba(0,0,0,0.6);
         }
         .modal-content {
             background-color: #fff;
-            margin: 5% auto;
-            padding: 20px;
+            margin: 5vh auto;
+            padding: 25px;
             width: 90%;
             max-width: 800px;
             border-radius: 5px;
@@ -78,155 +81,158 @@
             display: flex;
             flex-direction: column;
             gap: 20px;
-            max-height: 80vh;
+            max-height: 90vh;
             overflow-y: auto;
         }
         .close-btn {
             position: absolute;
-            top: 10px; right: 15px;
-            font-size: 28px;
+            top: 10px; right: 20px;
+            font-size: 30px;
             font-weight: bold;
             color: #aaa;
             cursor: pointer;
+            transition: color 0.2s;
         }
-        .close-btn:hover { color: #333; }
+        .close-btn:hover { color: #ee4d2d; }
 
-        /* Bố cục bên trong Modal */
-        .modal-body { display: flex; gap: 20px; flex-wrap: wrap; }
+        /* 彈出視窗內容佈局 */
+        .modal-body { display: flex; gap: 25px; flex-wrap: wrap; }
         .modal-image { flex: 1; min-width: 250px; }
-        .modal-image img { width: 100%; border-radius: 5px; }
-        .modal-details { flex: 2; min-width: 300px; }
-        .modal-details h2 { font-size: 20px; margin-bottom: 10px; }
-        .modal-details .price { color: #ee4d2d; font-size: 24px; font-weight: bold; margin-bottom: 15px; }
-        .modal-details p { line-height: 1.5; margin-bottom: 20px; color: #555; }
+        .modal-image img { width: 100%; border-radius: 5px; object-fit: cover; }
+        .modal-details { flex: 1.5; min-width: 300px; display: flex; flex-direction: column; }
+        .modal-details h2 { font-size: 22px; margin-bottom: 15px; line-height: 1.4; }
+        .modal-details .price { color: #ee4d2d; font-size: 26px; font-weight: bold; margin-bottom: 15px; }
+        .modal-details p { line-height: 1.6; margin-bottom: 25px; color: #555; }
         .buy-btn {
             background-color: #ee4d2d; color: white;
-            border: none; padding: 10px 20px; font-size: 16px;
+            border: none; padding: 12px 20px; font-size: 16px;
             cursor: pointer; border-radius: 3px; width: 100%;
+            margin-top: auto; transition: background 0.2s;
         }
         .buy-btn:hover { background-color: #d73a1e; }
 
-        /* Phần Bình Luận */
-        .comments-section { margin-top: 20px; border-top: 1px solid #eee; padding-top: 15px; }
-        .comment { margin-bottom: 15px; }
-        .comment-author { font-weight: bold; margin-bottom: 5px; font-size: 14px;}
-        .comment-text { font-size: 14px; color: #444; background: #f9f9f9; padding: 10px; border-radius: 5px;}
+        /* 評價區塊 */
+        .comments-section { margin-top: 20px; border-top: 1px solid #eee; padding-top: 20px; }
+        .comments-section h3 { font-size: 18px; margin-bottom: 15px; }
+        .comment { margin-bottom: 15px; background: #fdfdfd; padding: 12px; border-radius: 5px; border: 1px solid #f0f0f0; }
+        .comment-author { font-weight: bold; margin-bottom: 8px; font-size: 14px; color: #333; }
+        .comment-text { font-size: 14px; color: #666; line-height: 1.5; }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>MyStore</h1>
-        <input type="text" class="search-bar" placeholder="Tìm kiếm sản phẩm...">
+        <h1>線上商城</h1>
+        <input type="text" class="search-bar" placeholder="搜尋商品...">
     </header>
 
     <div class="container">
-        <div class="product-grid">
-            
-            <!-- SẢN PHẨM 1 -->
-            <!-- Để thay đổi thông tin, hãy sửa các dòng 'data-...' ở thẻ div bên dưới -->
-            <div class="product-card" onclick="openModal(this)"
-                 data-title="Áo Thun Nam Cổ Tròn Thun Cotton Cao Cấp" 
-                 data-price="₫150.000"
-                 data-desc="Áo thun nam chất liệu cotton 100%, co giãn 4 chiều, thấm hút mồ hôi tốt. Phù hợp mặc đi chơi, đi làm."
-                 data-image="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60">
-                <!-- THAY ĐỔI ẢNH HIỂN THỊ TẠI ĐÂY (Sửa đường dẫn trong src="") -->
-                <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Áo Thun" class="product-img">
-                <div class="product-info">
-                    <!-- THAY ĐỔI TÊN SẢN PHẨM Ở ĐÂY -->
-                    <div class="product-title">Áo Thun Nam Cổ Tròn Thun Cotton Cao Cấp</div>
-                    <!-- THAY ĐỔI GIÁ SẢN PHẨM Ở ĐÂY -->
-                    <div class="product-price">₫150.000</div>
-                </div>
-            </div>
-
-            <!-- SẢN PHẨM 2 -->
-            <div class="product-card" onclick="openModal(this)"
-                 data-title="Tai Nghe Không Dây Bluetooth 5.0 Chống Ồn" 
-                 data-price="₫299.000"
-                 data-desc="Tai nghe không dây âm thanh chất lượng cao, pin sử dụng liên tục 6 tiếng. Thiết kế nhỏ gọn, kèm hộp sạc tiện lợi."
-                 data-image="https://images.unsplash.com/photo-1590658268037-6bf12165a8df?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60">
-                <img src="https://images.unsplash.com/photo-1590658268037-6bf12165a8df?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Tai Nghe" class="product-img">
-                <div class="product-info">
-                    <div class="product-title">Tai Nghe Không Dây Bluetooth 5.0 Chống Ồn</div>
-                    <div class="product-price">₫299.000</div>
-                </div>
-            </div>
-
-            <!-- SẢN PHẨM 3 -->
-            <div class="product-card" onclick="openModal(this)"
-                 data-title="Đồng Hồ Nam Dây Da Thể Thao Chống Nước" 
-                 data-price="₫450.000"
-                 data-desc="Đồng hồ nam phong cách lịch lãm, mặt kính sapphire chống trầy xước, chống nước sinh hoạt 3ATM."
-                 data-image="https://images.unsplash.com/photo-1524592094714-0f0654e20314?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60">
-                <img src="https://images.unsplash.com/photo-1524592094714-0f0654e20314?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Đồng Hồ" class="product-img">
-                <div class="product-info">
-                    <div class="product-title">Đồng Hồ Nam Dây Da Thể Thao Chống Nước</div>
-                    <div class="product-price">₫450.000</div>
-                </div>
-            </div>
-
-        </div>
+        <!-- Danh sách sản phẩm sẽ được tạo tự động tại đây -->
+        <div class="product-grid" id="productGrid"></div>
     </div>
 
-    <!-- KHU VỰC CỬA SỔ HIỂN THỊ CHI TIẾT (Bị ẩn mặc định) -->
+    <!-- 彈出視窗 (Cửa sổ chi tiết) -->
     <div id="productModal" class="modal">
         <div class="modal-content">
             <span class="close-btn" onclick="closeModal()">&times;</span>
             
             <div class="modal-body">
                 <div class="modal-image">
-                    <img id="modal-img" src="" alt="Hình ảnh sản phẩm">
+                    <img id="modal-img" src="" alt="商品圖片">
                 </div>
                 <div class="modal-details">
-                    <h2 id="modal-title">Tên sản phẩm</h2>
-                    <div class="price" id="modal-price">₫0</div>
-                    <p id="modal-desc">Mô tả sản phẩm sẽ hiện ở đây...</p>
-                    <button class="buy-btn">Thêm vào giỏ hàng</button>
+                    <h2 id="modal-title">商品名稱</h2>
+                    <div class="price" id="modal-price">NT$ 0</div>
+                    <p id="modal-desc">商品描述...</p>
+                    <button class="buy-btn">加入購物車</button>
                 </div>
             </div>
 
-            <!-- Khu vực bình luận mẫu -->
             <div class="comments-section">
-                <h3>Đánh giá sản phẩm</h3>
+                <h3>商品評價</h3>
+                <!-- Bình luận mẫu (Bạn có thể thêm bớt tại đây) -->
                 <div class="comment">
-                    <div class="comment-author">Nguyễn Văn A - ⭐⭐⭐⭐⭐</div>
-                    <div class="comment-text">Giao hàng rất nhanh, đóng gói cẩn thận. Sản phẩm giống y như mô tả. Sẽ ủng hộ shop dài dài!</div>
+                    <div class="comment-author">王小明 - ⭐⭐⭐⭐⭐</div>
+                    <div class="comment-text">出貨速度超快，包裝得很仔細。實品跟照片一樣好看，下次還會再回購！</div>
                 </div>
                 <div class="comment">
-                    <div class="comment-author">Trần Thị B - ⭐⭐⭐⭐</div>
-                    <div class="comment-text">Chất lượng tạm ổn trong tầm giá. Màu sắc thực tế hơi đậm hơn trên hình một chút nhưng vẫn đẹp.</div>
+                    <div class="comment-author">林美玲 - ⭐⭐⭐⭐</div>
+                    <div class="comment-text">CP值很高，材質還不錯。如果顏色能再亮一點就更完美了。</div>
                 </div>
             </div>
-
         </div>
     </div>
 
     <script>
-        // Hàm lấy dữ liệu từ thẻ sản phẩm và đưa vào cửa sổ pop-up (Modal)
-        function openModal(element) {
-            // Lấy dữ liệu từ các thuộc tính data-... mà bạn thiết lập ở HTML
-            const title = element.getAttribute('data-title');
-            const price = element.getAttribute('data-price');
-            const desc = element.getAttribute('data-desc');
-            const imageSrc = element.getAttribute('data-image');
+        // =========================================================
+        // KHU VỰC DỮ LIỆU SẢN PHẨM (CHỈ CẦN CHỈNH SỬA Ở ĐÂY)
+        // =========================================================
+        const productsData = [
+            {
+                id: 1,
+                name: "男士純棉圓領短袖T恤", // Tên sản phẩm
+                price: "NT$ 350",           // Giá
+                image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60", // Link ảnh
+                desc: "100%純棉材質，透氣舒適，四面彈力不緊繃。適合休閒、通勤等多種場合穿著。" // Mô tả
+            },
+            {
+                id: 2,
+                name: "無線藍牙5.0降噪耳機",
+                price: "NT$ 890",
+                image: "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+                desc: "高音質立體聲，支援主動降噪。單次續航6小時，搭配充電盒可達24小時，輕巧好攜帶。"
+            },
+            {
+                id: 3,
+                name: "運動防水真皮錶帶手錶",
+                price: "NT$ 1,250",
+                image: "https://images.unsplash.com/photo-1524592094714-0f0654e20314?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+                desc: "商務休閒兩用，防刮藍寶石玻璃鏡面，30米生活防水，展現男士優雅品味。"
+            }
+            // ĐỂ THÊM SẢN PHẨM MỚI: Copy một khối { ... } ở trên, dán xuống dưới (nhớ thêm dấu phẩy) và sửa nội dung.
+        ];
 
-            // Cập nhật thông tin vào Modal
-            document.getElementById('modal-title').innerText = title;
-            document.getElementById('modal-price').innerText = price;
-            document.getElementById('modal-desc').innerText = desc;
-            document.getElementById('modal-img').src = imageSrc;
+        // =========================================================
+        // MÃ XỬ LÝ GIAO DIỆN (KHÔNG CẦN CHỈNH SỬA)
+        // =========================================================
+        
+        // Tự động tạo thẻ sản phẩm
+        const grid = document.getElementById('productGrid');
+        
+        productsData.forEach(product => {
+            const card = document.createElement('div');
+            card.className = 'product-card';
+            card.onclick = () => openModal(product.id);
+            
+            card.innerHTML = `
+                <img src="${product.image}" alt="${product.name}" class="product-img">
+                <div class="product-info">
+                    <div class="product-title">${product.name}</div>
+                    <div class="product-price">${product.price}</div>
+                </div>
+            `;
+            grid.appendChild(card);
+        });
 
-            // Hiển thị Modal
+        // Hàm mở Modal chi tiết
+        function openModal(productId) {
+            const product = productsData.find(p => p.id === productId);
+            if (!product) return;
+
+            document.getElementById('modal-title').innerText = product.name;
+            document.getElementById('modal-price').innerText = product.price;
+            document.getElementById('modal-desc').innerText = product.desc;
+            document.getElementById('modal-img').src = product.image;
+
             document.getElementById('productModal').style.display = "block";
         }
 
-        // Hàm đóng cửa sổ pop-up
+        // Hàm đóng Modal
         function closeModal() {
             document.getElementById('productModal').style.display = "none";
         }
 
-        // Bấm ra ngoài cửa sổ để đóng
+        // Đóng khi click ra ngoài
         window.onclick = function(event) {
             const modal = document.getElementById('productModal');
             if (event.target == modal) {
